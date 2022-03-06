@@ -14,6 +14,12 @@
     "test-all": "yarn lint && yarn type-check && yarn test"
   },
   "dependencies": {
+    "@web3-react/core": "^6.1.9",
+    "@web3-react/metamask": "^8.0.0-beta.0",
+    "@web3-react/store": "^8.0.0-beta.0",
+    "@web3-react/types": "^6.0.7",
+    "@web3-react/walletconnect": "^8.0.1-beta.0",
+    "ethers": "^5.5.4",
     "next": "12.1.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
