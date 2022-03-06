@@ -30,7 +30,7 @@ export default function WalletConnectCard() {
 
   // attempt to connect eagerly on mount
   useEffect(() => {
-    void walletConnect.connectEagerly()
+    // void walletConnect.connectEagerly()
   }, [])
 
   return (
