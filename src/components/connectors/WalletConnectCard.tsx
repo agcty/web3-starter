@@ -1,12 +1,21 @@
-import { useEffect } from 'react'
-import { hooks, walletConnect } from '../../connectors/walletConnect'
-import { Accounts } from '../Accounts'
-import { Card } from '../Card'
-import { Chain } from '../Chain'
-import { ConnectWithSelect } from '../ConnectWithSelect'
-import { Status } from '../Status'
+import { useEffect } from "react"
 
-const { useChainId, useAccounts, useError, useIsActivating, useIsActive, useProvider, useENSNames } = hooks
+import { hooks, walletConnect } from "../../connectors/walletConnect"
+import { Accounts } from "../Accounts"
+import { Card } from "../Card"
+import { Chain } from "../Chain"
+import { ConnectWithSelect } from "../ConnectWithSelect"
+import { Status } from "../Status"
+
+const {
+  useChainId,
+  useAccounts,
+  useError,
+  useIsActivating,
+  useIsActive,
+  useProvider,
+  useENSNames,
+} = hooks
 
 export default function WalletConnectCard() {
   const chainId = useChainId()
@@ -29,11 +38,11 @@ export default function WalletConnectCard() {
       <div>
         <b>WalletConnect</b>
         <Status isActivating={isActivating} error={error} isActive={isActive} />
-        <div style={{ marginBottom: '1rem' }} />
+        <div style={{ marginBottom: "1rem" }} />
         <Chain chainId={chainId} />
         <Accounts accounts={accounts} provider={provider} ENSNames={ENSNames} />
       </div>
-      <div style={{ marginBottom: '1rem' }} />
+      <div style={{ marginBottom: "1rem" }} />
       <ConnectWithSelect
         connector={walletConnect}
         chainId={chainId}
