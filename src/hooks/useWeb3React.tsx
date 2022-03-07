@@ -84,6 +84,17 @@ export function useENS() {
   return usePriorityENSName(provider)
 }
 
+export function useSignerOrProvider() {
+  const provider = useProvider()
+  const connector = useConnector()
+
+  if (connector instanceof WalletConnect || connector instanceof MetaMask) {
+    return provider?.getSigner()
+  } else {
+    return provider
+  }
+}
+
 export function useSwitchChain() {
   const connector = useConnector()
 
