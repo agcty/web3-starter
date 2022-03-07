@@ -3,11 +3,8 @@ import { useState } from "react"
 import ConnectorModal from "@components/ConnectorModal"
 
 import MetaMaskCard from "../components/connectors/MetaMaskCard"
-import {
-  useAccount,
-  useIsActive,
-} from "../components/connectors/PriorityExample"
 import WalletConnectCard from "../components/connectors/WalletConnectCard"
+import { useAccount, useIsActive } from "../hooks/useWeb3React"
 
 export default function Home() {
   const account = useAccount()
@@ -34,7 +31,11 @@ export default function Home() {
 
         {isActive.toString()}
 
-        <ConnectorModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+        <ConnectorModal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          desiredChain={1}
+        />
       </div>
     </>
   )

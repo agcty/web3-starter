@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>Next.js advanced start template.</title>
+        <title>Web3 Starter</title>
 
         <meta
           name="description"
@@ -21,9 +21,7 @@ export default function Home() {
       <main className="flex min-h-screen justify-center bg-gradient-to-b from-gray-50 via-gray-50 to-gray-100 py-20">
         <div>
           <h1 className="px-5 text-center text-4xl font-bold leading-tight tracking-tight sm:mt-4 sm:text-6xl">
-            Next.js
-            <br />
-            Advanced Starter
+            Web3 Starter
           </h1>
 
           <h2 className="mx-auto mt-8 max-w-4xl px-10 text-center text-base tracking-tight text-gray-600 sm:text-2xl md:mt-5 md:text-2xl">
@@ -40,6 +38,14 @@ export default function Home() {
             >
               <div className="flex flex-col justify-center rounded-l-lg bg-gray-50">
                 <FeatureList>
+                  <Feature main="web3-react">
+                    Connect your wallet with <InfoText text="web3-react" />
+                  </Feature>
+
+                  <Feature main="TypeChain">
+                    <InfoText text="TypeChain" /> powered typed contracts
+                  </Feature>
+
                   <Feature main="Tailwind CSS">
                     Fast design workflow with <InfoText text="Tailwind CSS" />
                   </Feature>

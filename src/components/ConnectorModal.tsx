@@ -3,28 +3,31 @@ import { Fragment } from "react"
 import { Dialog, Transition } from "@headlessui/react"
 import Image from "next/image"
 
+import { getAddChainParameters } from "@chains"
 import { metaMask } from "@connectors/metaMask"
 import { walletConnect } from "@connectors/walletConnect"
 
-const wallets = [
-  {
-    label: "MetaMask",
-    imageSrc: "/connectors/metamask.svg",
-    connector: metaMask,
-  },
-  {
-    label: "WalletConnect",
-    imageSrc: "/connectors/walletconnect.svg",
-    connector: walletConnect,
-  },
-]
+// const wallets = [
+//   {
+//     label: "MetaMask",
+//     image: "/connectors/metamask.svg",
+//     connector: metaMask,
+//   },
+//   {
+//     label: "WalletConnect",
+//     image: "/connectors/walletconnect.svg",
+//     connector: walletConnect,
+//   },
+// ]
 
 export default function ConnectorModal({
   isOpen = false,
   onClose,
+  desiredChain,
 }: {
   isOpen: boolean
   onClose: () => void
+  desiredChain: number
 }) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -71,27 +74,23 @@ export default function ConnectorModal({
               </Dialog.Title>
 
               <div className="mt-8 space-y-2">
-                {wallets.map(({ label, imageSrc, connector }) => (
-                  <button
-                    className="focus-visible:bg-dark2-700 flex w-full justify-between rounded-md bg-gray-100 px-4 py-3 transition hover:bg-gray-200 focus-visible:outline-none"
-                    key={label}
-                    onClick={async () => {
-                      await connector.activate()
-                      onClose()
-                    }}
-                  >
-                    <span className="text-lg font-semibold text-gray-800">
-                      {label}
-                    </span>
-                    <Image
-                      src={imageSrc}
-                      width={32}
-                      priority
-                      height={32}
-                      alt="MetaMask"
-                    />
-                  </button>
-                ))}
+                <ConnectButton
+                  label="MetaMask"
+                  image="/connectors/metamask.svg"
+                  onClick={async () => {
+                    await metaMask.activate(getAddChainParameters(desiredChain))
+                    onClose()
+                  }}
+                />
+
+                <ConnectButton
+                  label="WalletConnect"
+                  image="/connectors/walletconnect.svg"
+                  onClick={async () => {
+                    await walletConnect.activate(desiredChain)
+                    onClose()
+                  }}
+                />
               </div>
 
               <button
@@ -117,5 +116,26 @@ export default function ConnectorModal({
         </div>
       </Dialog>
     </Transition>
+  )
+}
+
+function ConnectButton({
+  label,
+  image,
+  onClick,
+}: {
+  label: string
+  image: string
+  onClick: () => void
+}) {
+  return (
+    <button
+      className="focus-visible:bg-dark2-700 flex w-full justify-between rounded-md bg-gray-100 px-4 py-3 transition hover:bg-gray-200 focus-visible:outline-none"
+      key={label}
+      onClick={onClick}
+    >
+      <span className="text-lg font-semibold text-gray-800">{label}</span>
+      <Image src={image} width={32} priority height={32} alt="MetaMask" />
+    </button>
   )
 }

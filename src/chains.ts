@@ -12,6 +12,12 @@ const MATIC: AddEthereumChainParameter["nativeCurrency"] = {
   decimals: 18,
 }
 
+const MOONRIVER: AddEthereumChainParameter["nativeCurrency"] = {
+  name: "Moonriver",
+  symbol: "MOVR",
+  decimals: 18,
+}
+
 interface BasicChainInformation {
   urls: string[]
   name: string
@@ -159,6 +165,14 @@ export const CHAINS: {
     name: "Polygon Mumbai",
     nativeCurrency: MATIC,
     blockExplorerUrls: ["https://mumbai.polygonscan.com"],
+  },
+  1285: {
+    urls: ["https://rpc.api.moonriver.moonbeam.network"].filter(
+      (url) => url !== undefined
+    ),
+    name: "Moonriver",
+    nativeCurrency: MOONRIVER,
+    blockExplorerUrls: ["https://moonriver.moonscan.io"],
   },
 }
 
