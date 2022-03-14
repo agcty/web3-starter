@@ -1,3 +1,5 @@
+import { useMemo } from "react"
+
 import { getPriorityConnector } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
 import { Network } from "@web3-react/network"
@@ -86,13 +88,15 @@ export function useENS() {
 
 export function useSignerOrProvider() {
   const provider = useProvider()
-  const connector = useConnector()
+  console.log(provider)
 
-  if (connector instanceof WalletConnect || connector instanceof MetaMask) {
-    return provider?.getSigner()
-  } else {
-    return provider
-  }
+  return useMemo(() => {
+    if (provider?.["getSigner"]) {
+      return provider.getSigner()
+    } else {
+      return provider
+    }
+  }, [provider])
 }
 
 export function useSwitchChain() {
