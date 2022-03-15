@@ -25,7 +25,7 @@ export function useContract<Contract = any>(
     if (provider?.["getSigner"]) {
       return provider.getSigner()
     } else {
-      return provider
+      return null
     }
   }, [provider])
 

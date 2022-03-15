@@ -88,7 +88,7 @@ export function useENS() {
 
 export function useSignerOrProvider() {
   const provider = useProvider()
-  console.log(provider)
+  console.log({ provider })
 
   return useMemo(() => {
     if (provider?.["getSigner"]) {

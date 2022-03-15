@@ -42,9 +42,10 @@ export function useToken(address: string) {
   // removing contract from the key here will result in balances and allowances not being able to be fetched
   function useDecimals() {
     // never changes so make it immutable
+
     const { data } = useSWRImmutable(
       [`/token/${address}/decimals/`, contract],
-      (_, contract) => contract.decimals()
+      (_) => contract.decimals()
     )
     return data
   }
