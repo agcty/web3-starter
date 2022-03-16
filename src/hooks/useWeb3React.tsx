@@ -21,23 +21,10 @@ function getName(connector: Connector) {
   return "Unknown"
 }
 
-// web3-react will go through this list and try to use the first connector that is available
-// that's why this list should be sorted by priority, i.e. if you want to metamask to have a higher priority than walletconnect it should come first
 const priorityWeb3 = getPriorityConnector(
   [metaMask, metaMaskHooks],
   [walletConnect, walletConnectHooks]
 )
-
-// web3-react v8 is extremely flexible and allows you to use multiple connectors at once
-// this is very different from v6, it's a little harder to understand and needs a little more "boilerplate" but is inifinitely more flexible
-// in most cases you will only need one connector however, so that's why we are exporting hooks tied to the priority connector
-// if your dApp only needs one connector, it is recommended to use the priority connector
-// why do we have to re-export all of these things, why can web3-react not just export these already?
-// that's a valid question, this however, is a necessary tradeoff between flexibility and ease of use
-// web3-react has no way to know which connector is the priority one, or which connectors even exist, so we have to manually tell it
-// this is in contrast to the v6 version, where the Web3Provider was basically responsible for this
-// practically, this means we'll have to re-export all of these hooks, but it's a very small list
-// this is quite common so maybe there is a way to call a setup function with a list of connectors and then web3-react will automatically pick the priority one
 
 export function useConnector() {
   const { usePriorityConnector } = priorityWeb3
