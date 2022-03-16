@@ -2,18 +2,10 @@ import { useState } from "react"
 
 import ConnectorModal from "@components/ConnectorModal"
 import { useToken } from "@hooks/useToken"
-import {
-  useAccount,
-  useChainId,
-  useIsActive,
-  useSwitchChain,
-  useWeb3Context,
-} from "@hooks/useWeb3React"
+import { useSwitchChain, useWeb3Context } from "@hooks/useWeb3React"
 
 export default function Home() {
-  const isActive = useIsActive()
-  const account = useAccount()
-  const chainId = useChainId()
+  const { active, account, chainId } = useWeb3Context()
 
   const [isOpen, setIsOpen] = useState(false)
   const [isOther, showOther] = useState(false)
@@ -27,7 +19,7 @@ export default function Home() {
 
           <ul>
             <li>Account: {account}</li>
-            <li>isActive: {isActive.toString()}</li>
+            <li>isActive: {active.toString()}</li>
             <li>chainId: {chainId}</li>
           </ul>
 

@@ -15,6 +15,7 @@ function getContract<T = Contract>(
   return <T>(<unknown>new Contract(address, abi, provider))
 }
 
+// heavily inspired by uniswaps interface, thanks Noah, great work!
 export function useContract<Contract = any>(
   address: string,
   abi: ContractInterface
@@ -39,8 +40,4 @@ export function useContract<Contract = any>(
   )
 
   return contract
-}
-
-export function useTest() {
-  console.log("test 2")
 }
