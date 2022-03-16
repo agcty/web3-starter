@@ -5,7 +5,7 @@ import { Provider } from "@ethersproject/providers"
 import { Contract, ContractInterface, Signer } from "ethers"
 import { isAddress } from "ethers/lib/utils"
 
-import { useProvider } from "./useWeb3React"
+import { useWeb3Context } from "./useWeb3React"
 
 function getContract<T = Contract>(
   address: string,
@@ -19,7 +19,7 @@ export function useContract<Contract = any>(
   address: string,
   abi: ContractInterface
 ) {
-  const provider = useProvider()
+  const { library: provider } = useWeb3Context()
 
   const signerOrProvider = useMemo(() => {
     if (provider?.["getSigner"]) {

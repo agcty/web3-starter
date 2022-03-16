@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import { createContext, useContext, useMemo } from "react"
 
 import { getPriorityConnector } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
@@ -48,6 +48,19 @@ export function useWeb3React() {
   const { usePriorityWeb3React, usePriorityProvider } = priorityWeb3
   const priorityProvider = usePriorityProvider()
   return usePriorityWeb3React(priorityProvider)
+}
+
+const Web3Contextext = createContext<ReturnType<typeof useWeb3React>>(null)
+
+export function Web3Provider({ children }: { children: React.ReactNode }) {
+  const values = useWeb3React()
+  return (
+    <Web3Contextext.Provider value={values}>{children}</Web3Contextext.Provider>
+  )
+}
+
+export function useWeb3Context() {
+  return useContext(Web3Contextext)
 }
 
 export function useAccount() {

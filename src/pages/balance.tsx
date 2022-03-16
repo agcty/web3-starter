@@ -6,8 +6,8 @@ import {
   useAccount,
   useChainId,
   useIsActive,
-  useProvider,
   useSwitchChain,
+  useWeb3Context,
 } from "@hooks/useWeb3React"
 
 export default function Home() {
@@ -51,14 +51,14 @@ export default function Home() {
       <ConnectorModal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        desiredChain={1}
+        desiredChain={1285}
       />
     </>
   )
 }
 
 function Test1() {
-  const provider1 = useProvider()
+  const { library: provider1 } = useWeb3Context()
   console.log({ provider1 })
 
   const { useBalance, useAllowance } = useToken(
@@ -73,8 +73,8 @@ function Test1() {
 }
 
 function Test2() {
-  const provider1 = useProvider()
-  console.log({ provider1 })
+  const { library: provider2 } = useWeb3Context()
+  console.log({ provider2 })
 
   const { useBalance, useAllowance } = useToken(
     "0x4a436073552044D5f2f49B176853ad3Ad473d9d6"

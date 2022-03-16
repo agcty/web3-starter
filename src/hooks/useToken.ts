@@ -43,9 +43,8 @@ export function useToken(address: string) {
   function useDecimals() {
     // never changes so make it immutable
 
-    const { data } = useSWRImmutable(
-      [`/token/${address}/decimals/`, contract],
-      (_) => contract.decimals()
+    const { data } = useSWRImmutable(`/token/${address}/decimals/`, () =>
+      contract.decimals()
     )
     return data
   }
