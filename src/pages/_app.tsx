@@ -1,17 +1,19 @@
 import React from "react"
 
+import { Web3ReactProvider } from "@web3-react/core"
 import { AppProps } from "next/app"
 
-import "../styles/tailwind.scss"
 import Web3Manager from "@components/connectors/Web3Manager"
-import { Web3Provider } from "@hooks/useWeb3React"
+import connectors from "@connectors"
+
+import "../styles/tailwind.scss"
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
-    <Web3Provider>
+    <Web3ReactProvider connectors={connectors}>
       <Web3Manager />
       <Component {...pageProps} />
-    </Web3Provider>
+    </Web3ReactProvider>
   )
 }
 

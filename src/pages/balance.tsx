@@ -1,11 +1,12 @@
 import { useState } from "react"
 
+import { useWeb3React } from "@web3-react/core"
+
 import ConnectorModal from "@components/ConnectorModal"
-import { useToken } from "@hooks/useToken"
-import { useSwitchChain, useWeb3Context } from "@hooks/useWeb3React"
+import { useSwitchChain } from "@hooks/useWeb3React"
 
 export default function Home() {
-  const { active, account, chainId } = useWeb3Context()
+  const { isActive, account, chainId } = useWeb3React()
 
   const [isOpen, setIsOpen] = useState(false)
   const [isOther, showOther] = useState(false)
@@ -19,7 +20,7 @@ export default function Home() {
 
           <ul>
             <li>Account: {account}</li>
-            <li>isActive: {active.toString()}</li>
+            <li>isActive: {isActive.toString()}</li>
             <li>chainId: {chainId}</li>
           </ul>
 
@@ -34,9 +35,6 @@ export default function Home() {
           >
             Open dialog
           </button>
-
-          {isOther && <Test1 />}
-          {!isOther && <Test2 />}
         </div>
       </div>
 
@@ -47,32 +45,4 @@ export default function Home() {
       />
     </>
   )
-}
-
-function Test1() {
-  const { library: provider1 } = useWeb3Context()
-  console.log({ provider1 })
-
-  const { useBalance, useAllowance } = useToken(
-    "0x89f52002e544585b42f8c7cf557609ca4c8ce12a"
-  )
-  const { data: allowance } = useAllowance(
-    "0x6f7D019502e17F1ef24AC67a260c65Dd23b759f1"
-  )
-  const { data } = useBalance()
-  console.log("test 1", data)
-  return <div className={!data ? "bg-red-400" : "bg-white"}>sRome: {data}</div>
-}
-
-function Test2() {
-  const { library: provider2 } = useWeb3Context()
-  console.log({ provider2 })
-
-  const { useBalance, useAllowance } = useToken(
-    "0x4a436073552044D5f2f49B176853ad3Ad473d9d6"
-  )
-
-  const { data } = useBalance()
-  console.log("test 2", data)
-  return <div>sRome: {data}</div>
 }
