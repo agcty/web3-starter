@@ -3,6 +3,7 @@ import { useState } from "react"
 import { useWeb3React } from "@web3-react/core"
 
 import ConnectorModal from "@components/ConnectorModal"
+import { useBalance } from "@hooks/useToken"
 import { useSwitchChain } from "@hooks/useWeb3React"
 
 export default function Home() {
@@ -23,6 +24,9 @@ export default function Home() {
             <li>isActive: {isActive.toString()}</li>
             <li>chainId: {chainId}</li>
           </ul>
+
+          {isOpen && <Test1 />}
+          {!isOpen && <Test2 />}
 
           <button className="block" onClick={() => showOther(!isOther)}>
             Show {isOther ? "Test1" : "Test2"}
@@ -45,4 +49,14 @@ export default function Home() {
       />
     </>
   )
+}
+
+const Test1 = () => {
+  const { data } = useBalance("0x89F52002E544585b42F8c7Cf557609CA4c8ce12A")
+  return <div>{data}</div>
+}
+
+const Test2 = () => {
+  const { data } = useBalance("0x4a436073552044D5f2f49B176853ad3Ad473d9d6")
+  return <div>{data}</div>
 }

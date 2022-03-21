@@ -7,19 +7,6 @@ import { getAddChainParameters } from "@chains"
 import { metaMask } from "@connectors/metaMask"
 import { walletConnect } from "@connectors/walletConnect"
 
-// const wallets = [
-//   {
-//     label: "MetaMask",
-//     image: "/connectors/metamask.svg",
-//     connector: metaMask,
-//   },
-//   {
-//     label: "WalletConnect",
-//     image: "/connectors/walletconnect.svg",
-//     connector: walletConnect,
-//   },
-// ]
-
 export default function ConnectorModal({
   isOpen = false,
   onClose,
