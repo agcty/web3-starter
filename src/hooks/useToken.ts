@@ -1,9 +1,9 @@
+import { useWeb3React } from "@web3-react/core"
 import useSWR from "swr"
 import useSWRImmutable from "swr/immutable"
 
 import GenericERC20Abi from "@abi/GenericERC20.json"
 import { GenericERC20 } from "@abi/types"
-import { useAccount, useProvider } from "@hooks/useWeb3React"
 import { parseBigNumberToFloat } from "@utils"
 
 import { useContract } from "./useContract"
@@ -17,19 +17,30 @@ import { useContract } from "./useContract"
 // also, very often you want to transform data in a specific way (e.g BigNumber -> number but format with decimals in mind) and the libraries I've come across don't really accomodate for this kind of logic
 // so hooks like a generalized useContractRead hook are really only useful if you don't have to pass arguments (in my experience)
 // what I also like about this strict separation is that it easily allows you to switch between data fetching libraries if need be
-// one "downside" of using swr for example however, is that you need to be very careful with keys and dependencies, sometimes you feel like the data just isn't fetched fast enough which most likely is due to a key issue
-// if you do it right however, data fetching happens almost instantly, so if it feels slow and you can't quite figure it out and start thinking there's no way it could work, just know that there is a way, just needs some tinkering here and there
-// these hooks that directly fetch data from the contract are a good (if not only) solution if you are not able to fetch data from a graphql endpoint (e.g as provided by the graph), if you have the choice, you should use the graphql endpoint
+// one "downside" of using swr for example however, is that you need to be very careful with keys and dependencies, sometimes it feels like data just isn't fetched fast enough which, this is a good pointer that your keys are wrong
+// if you do it right however, data fetching happens almost instantly, so if it feels slow and you can't quite figure it out and start thinking there's no way it could work, just know that there is a way, often just needs tinkering with the keys
 
+/**
+ *
+ * @param address
+ * @description Typed convenience hook for interacting with ERC20 tokens.
+ * @example
+ * const { contract, useBalance, useAllowance} = useToken(address)
+ * //
+ * const {data: balance} = useBalance(account)
+ * const {data: allowance} = useAllowance(account)
+ * console.log(balance)
+ */
 export function useToken(address: string) {
   const contract = useContract<GenericERC20>(address, GenericERC20Abi)
-  const account = useAccount()
+  const { account } = useWeb3React()
 
   function useAllowance(spender: string, owner = account) {
     const decimals = useDecimals()
 
     // strictly speaking, the key in this case would need the contract as a dependency as well but it's implicitly taken from the useDecimals hook
     // if decimals isn't ready, allowance isn't fetched but decimals is only ready when contract is ready
+    // also, having decimals as a dependency here and return null if not available prevents flickering
     return useSWR(
       decimals ? [`/token/${address}/allowance`, owner, spender] : null,
       async (_, owner, spender) => {
@@ -39,13 +50,12 @@ export function useToken(address: string) {
     )
   }
 
-  // removing contract from the key here will result in balances and allowances not being able to be fetched
   function useDecimals() {
     // never changes so make it immutable
-
+    // only fetch decimals when there is an account which means there must be a provider
     const { data } = useSWRImmutable(
-      [`/token/${address}/decimals/`, contract],
-      (_) => contract.decimals()
+      account ? `/token/${address}/decimals/` : null,
+      () => contract.decimals()
     )
     return data
   }
@@ -53,8 +63,8 @@ export function useToken(address: string) {
   function useName() {
     // never changes so make it immutable
     const { data } = useSWRImmutable(
-      [`/token/${address}/name/`, contract],
-      (_, contract) => contract.name()
+      account ? `/token/${address}/name/` : null,
+      () => contract.name()
     )
     return data
   }
@@ -63,9 +73,9 @@ export function useToken(address: string) {
   // if decimals isn't ready, allowance isn't fetched but decimals is only ready when contract is ready
   function useBalance(owner = account) {
     const decimals = useDecimals()
-    // needs this decimal check to tell it to only conditionally fetch balance when decimals are ready, otherwise there will be flickering
 
     return useSWR(
+      // needs this decimal check to tell it to only conditionally fetch balance when decimals are ready, otherwise there will be flickering
       decimals ? [`/token/${address}/balance`, owner, decimals] : null,
       async (_, owner, decimals) => {
         const bal = await contract.balanceOf(owner)
@@ -83,23 +93,37 @@ export function useToken(address: string) {
   }
 }
 
-// funky "circular" usage of nested hooks but exporting them as a standalone hook
+/**
+ *
+ * @param address
+ * @returns SWRResponse<number, any>
+ * @description Convenience wrapper around useToken that returns the balance of the token in the current account, if you only need to use the balance and don't care about the rest of the token, use this
+ * @example
+ * const { data: balance } = useBalance(address)
+ */
 export function useBalance(address: string) {
   const { useBalance } = useToken(address)
   return useBalance()
 }
 
+/**
+ *
+ * @param address
+ * @returns SWRResponse<number, any>
+ * @description Convenience wrapper around useToken that returns the allowance of a token, if you only need to use the allowance and don't care about the rest of the token, use this
+ * @example
+ * const { data: allowance } = useAllowance(address)
+ */
 export function useAllowance(address: string, spender: string, owner?: string) {
   const { useAllowance } = useToken(address)
   return useAllowance(spender, owner)
 }
 
 export function useNativeBalance() {
-  const account = useAccount()
-  const provider = useProvider()
+  const { account, provider } = useWeb3React()
 
   return useSWR(
-    provider ? ["/movr/balance/", account] : null,
+    provider ? ["/native/balance/", account] : null,
     async (_, account) => {
       const bal = await provider.getBalance(account)
       return parseBigNumberToFloat(bal, 18)

@@ -5,7 +5,7 @@ import { Provider } from "@ethersproject/providers"
 import { Contract, ContractInterface, Signer } from "ethers"
 import { isAddress } from "ethers/lib/utils"
 
-import { useProvider } from "./useWeb3React"
+import { useSignerOrProvider } from "./useWeb3React"
 
 function getContract<T = Contract>(
   address: string,
@@ -15,19 +15,12 @@ function getContract<T = Contract>(
   return <T>(<unknown>new Contract(address, abi, provider))
 }
 
+// heavily inspired by uniswaps interface, thanks Noah, great work!
 export function useContract<Contract = any>(
   address: string,
   abi: ContractInterface
 ) {
-  const provider = useProvider()
-
-  const signerOrProvider = useMemo(() => {
-    if (provider?.["getSigner"]) {
-      return provider.getSigner()
-    } else {
-      return null
-    }
-  }, [provider])
+  const signerOrProvider = useSignerOrProvider()
 
   if (!isAddress(address) || address === AddressZero) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
@@ -39,8 +32,4 @@ export function useContract<Contract = any>(
   )
 
   return contract
-}
-
-export function useTest() {
-  console.log("test 2")
 }

@@ -1,13 +1,11 @@
 import { useState } from "react"
 
+import { useWeb3React } from "@web3-react/core"
+
 import ConnectorModal from "@components/ConnectorModal"
 
-import { useAccount, useIsActive } from "../hooks/useWeb3React"
-
 export default function Home() {
-  const account = useAccount()
-
-  const isActive = useIsActive()
+  const { isActive, account } = useWeb3React()
   const [isOpen, setIsOpen] = useState(false)
 
   return (

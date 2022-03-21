@@ -1,19 +1,13 @@
 import { useState } from "react"
 
+import { useWeb3React } from "@web3-react/core"
+
 import ConnectorModal from "@components/ConnectorModal"
-import { useToken } from "@hooks/useToken"
-import {
-  useAccount,
-  useChainId,
-  useIsActive,
-  useProvider,
-  useSwitchChain,
-} from "@hooks/useWeb3React"
+import { useBalance } from "@hooks/useToken"
+import { useSwitchChain } from "@hooks/useWeb3React"
 
 export default function Home() {
-  const isActive = useIsActive()
-  const account = useAccount()
-  const chainId = useChainId()
+  const { isActive, account, chainId } = useWeb3React()
 
   const [isOpen, setIsOpen] = useState(false)
   const [isOther, showOther] = useState(false)
@@ -31,6 +25,9 @@ export default function Home() {
             <li>chainId: {chainId}</li>
           </ul>
 
+          {isOpen && <Test1 />}
+          {!isOpen && <Test2 />}
+
           <button className="block" onClick={() => showOther(!isOther)}>
             Show {isOther ? "Test1" : "Test2"}
           </button>
@@ -42,45 +39,24 @@ export default function Home() {
           >
             Open dialog
           </button>
-
-          {isOther && <Test1 />}
-          {!isOther && <Test2 />}
         </div>
       </div>
 
       <ConnectorModal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        desiredChain={1}
+        desiredChain={1285}
       />
     </>
   )
 }
 
-function Test1() {
-  const provider1 = useProvider()
-  console.log({ provider1 })
-
-  const { useBalance, useAllowance } = useToken(
-    "0x89f52002e544585b42f8c7cf557609ca4c8ce12a"
-  )
-  const { data: allowance } = useAllowance(
-    "0x6f7D019502e17F1ef24AC67a260c65Dd23b759f1"
-  )
-  const { data } = useBalance()
-  console.log("test 1", data)
-  return <div className={!data ? "bg-red-400" : "bg-white"}>sRome: {data}</div>
+const Test1 = () => {
+  const { data } = useBalance("0x89F52002E544585b42F8c7Cf557609CA4c8ce12A")
+  return <div>{data}</div>
 }
 
-function Test2() {
-  const provider1 = useProvider()
-  console.log({ provider1 })
-
-  const { useBalance, useAllowance } = useToken(
-    "0x4a436073552044D5f2f49B176853ad3Ad473d9d6"
-  )
-
-  const { data } = useBalance()
-  console.log("test 2", data)
-  return <div>sRome: {data}</div>
+const Test2 = () => {
+  const { data } = useBalance("0x4a436073552044D5f2f49B176853ad3Ad473d9d6")
+  return <div>{data}</div>
 }
