@@ -2,10 +2,9 @@ import { useMemo } from "react"
 
 import { AddressZero } from "@ethersproject/constants"
 import { Provider } from "@ethersproject/providers"
+import { useWeb3React } from "@web3-react/core"
 import { Contract, ContractInterface, Signer } from "ethers"
 import { isAddress } from "ethers/lib/utils"
-
-import { useSignerOrProvider } from "./useWeb3React"
 
 function getContract<T = Contract>(
   address: string,
@@ -20,7 +19,15 @@ export function useContract<Contract = any>(
   address: string,
   abi: ContractInterface
 ) {
-  const signerOrProvider = useSignerOrProvider()
+  const { provider } = useWeb3React()
+
+  const signerOrProvider = useMemo(() => {
+    if (provider?.["getSigner"]) {
+      return provider.getSigner()
+    } else {
+      return provider
+    }
+  }, [provider])
 
   if (!isAddress(address) || address === AddressZero) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
